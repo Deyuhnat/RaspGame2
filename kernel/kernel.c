@@ -13,10 +13,6 @@
 // the compiler randomly ask for memcpy so i included it here
 // some manual string functions (cannot include "string.h")
 
-
-
-
-
 char *welcome_message =
     "####### ####### ####### #######  #####  #        #####    ###   \n"
     "#       #       #          #    #     # #    #  #     #  #   #  \n"
@@ -46,15 +42,11 @@ char *welcome_message =
     "Developed by Group 26\n"
     "\n";
 
-
-
 char *commands[] = {
     "help",
     "clear",
     "setcolor",
-    "play"
-    };
-
+    "play"};
 
 int num_commands = sizeof(commands) / sizeof(commands[0]);
 char *colors[] = {
@@ -154,42 +146,40 @@ void setcolor(const char *textColor, const char *backgroundColor)
     }
 }
 
-
-void drawLargeImageScroll()
-{
+void drawLargeImageScroll() {
     uart_puts("Use WASD to scroll. Press Enter to quit scroll mode ");
+
+    // Assuming you have image1, image2, and image3 loaded and ready to be displayed
+    unsigned char *images[] = {image2image2, image3image3, image4image4};
+    int currentImageIndex = 0; // start with the first image
+    
     int y = 0;
     int x = 0;
-    drawImage(image2image2, x, y, 1920, 1080);
+    
+    drawImage(images[currentImageIndex], x, y, 1920, 1080); // draw the first image
 
-    while (1)
-    {
+    while (1) {
         char c = uart_getc();
 
-        if (c == 'w')
-        {
+        if (c == 'w') {
             y -= 20;
-        }
-        else if (c == 's')
-        {
+        } else if (c == 's') {
             y += 20;
-        }
-        else if (c == 'd')
-        {
-            x += 20;
-        }
-        else if (c == 'a')
-        {
-            x -= 20;
-        }
-        else if (c == '\n')
-        {
+        } else if (c == 'd') {
+            currentImageIndex = (currentImageIndex + 1) % 3; // go to the next image in the array, and loop back to the first image after the last one
+            x = 0; // reset x coordinate whenever the image changes
+            y = 0; // reset y coordinate whenever the image changes
+        } else if (c == 'a') {
+            currentImageIndex = (currentImageIndex - 1 + 3) % 3; // go to the previous image in the array, and loop back to the last image after the first one
+            x = 0; // reset x coordinate whenever the image changes
+            y = 0; // reset y coordinate whenever the image changes
+        } else if (c == '\n') {
             uart_puts("\n");
             break;
         }
-        clearScreen(0);
 
-        drawImage(image2image2, x, y, 1920, 1080);
+        clearScreen(0);
+        drawImage(images[currentImageIndex], x, y, 1920, 1080); // draw the current image
     }
 }
 void playVideo()
@@ -239,9 +229,8 @@ void execute_command(char *cmd)
     {
         uart_puts("*Supported commands:\n");
         uart_puts("help, clear, setcolor, showinfo, play, showimage, showlargeimage, showvideo, displaytext\n\n");
-        
     }
-    
+
     else if (strcmp(cmd, "showimage") == 0)
     {
         clearScreen(0);
@@ -256,7 +245,7 @@ void execute_command(char *cmd)
     }
     else if (strcmp(cmd, "showvideo") == 0)
     {
-        clearScreen(0); 
+        clearScreen(0);
         // framebf_init(1024, 720);
         playVideo();
     }
@@ -295,7 +284,7 @@ void execute_command(char *cmd)
 
         setcolor(textColor, backgroundColor);
     }
- 
+
     else if (strcmp(cmd, commands[3]) == 0)
     {
         clearScreen(0);
