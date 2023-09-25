@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "mbox.h": "c",
+        "player.h": "c",
+        "knight_actions.h": "c",
+        "character.h": "c",
+        "uart1.h": "c",
+        "knight.h": "c",
+        "stdint.h": "c",
+        "stringg.h": "c"
+    }
+}
