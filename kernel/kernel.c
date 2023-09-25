@@ -90,7 +90,7 @@ void showmenu()
     uart_puts(
         "\n\tEnter a command from below:\n"
         "\tdisplaytext\tDisplay text on screen\n"
-        "\tshowimage\tDisplay a small image\n"
+        "\tshowimages\tDisplay three images\n"
         "\tshowlargeimage\tDisplay a scrollable large image\n"
         "\tshowvideo\tDisplay a video\n"
         "\tplay\t\tPlay game\n");
@@ -145,9 +145,46 @@ void setcolor(const char *textColor, const char *backgroundColor)
         }
     }
 }
-
-void drawLargeImageScroll() {
+void drawLargeImageScroll()
+{
     uart_puts("Use WASD to scroll. Press Enter to quit scroll mode ");
+    int y = 0;
+    int x = 0;
+    drawImage(image2image2, x, y, 1920, 1080);
+
+    while (1)
+    {
+        char c = uart_getc();
+
+        if (c == 'w')
+        {
+            y -= 20;
+        }
+        else if (c == 's')
+        {
+            y += 20;
+        }
+        else if (c == 'd')
+        {
+            x += 20;
+        }
+        else if (c == 'a')
+        {
+            x -= 20;
+        }
+        else if (c == '\n')
+        {
+            uart_puts("\n");
+            break;
+        }
+        clearScreen(0);
+
+        drawImage(image2image2, x, y, 1920, 1080);
+    }
+}
+
+void drawThreeImage() {
+    uart_puts("Use AD to change. Press Enter to quit slideview mode ");
 
     // Assuming you have image1, image2, and image3 loaded and ready to be displayed
     unsigned char *images[] = {image2image2, image3image3, image4image4};
@@ -231,17 +268,18 @@ void execute_command(char *cmd)
         uart_puts("help, clear, setcolor, showinfo, play, showimage, showlargeimage, showvideo, displaytext\n\n");
     }
 
-    else if (strcmp(cmd, "showimage") == 0)
+    else if (strcmp(cmd, "showimages") == 0)
     {
         clearScreen(0);
         // framebf_init(1024, 720);
-        drawImage(image1image1, 0, 0, 480, 270);
+        drawThreeImage();
     }
     else if (strcmp(cmd, "showlargeimage") == 0)
     {
         clearScreen(0);
         // framebf_init(1024, 720);
         drawLargeImageScroll();
+        
     }
     else if (strcmp(cmd, "showvideo") == 0)
     {
