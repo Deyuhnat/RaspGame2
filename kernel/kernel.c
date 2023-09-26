@@ -2,7 +2,7 @@
 #include "../uart/uart1.h"
 #include "framebf.h"
 #include "mbox.h"
-#include "game.h"
+#include "stringg.h"
 #include "image.h"
 #include "video.h"
 
@@ -45,8 +45,7 @@ char *welcome_message =
 char *commands[] = {
     "help",
     "clear",
-    "setcolor",
-    "play"};
+    "setcolor"};
 
 int num_commands = sizeof(commands) / sizeof(commands[0]);
 char *colors[] = {
@@ -93,7 +92,7 @@ void showmenu()
         "\tshowimages\tDisplay three images\n"
         "\tshowlargeimage\tDisplay a scrollable large image\n"
         "\tshowvideo\tDisplay a video\n"
-        "\tplay\t\tPlay game\n");
+        /*"\tplay\t\tPlay game\n"*/);
 }
 
 void uppercaseLetter(char *str)
@@ -187,7 +186,7 @@ void drawThreeImage() {
     uart_puts("Use AD to change. Press Enter to quit slideview mode ");
 
     // Assuming you have image1, image2, and image3 loaded and ready to be displayed
-    unsigned char *images[] = {image2image2, image3image3, image4image4};
+    unsigned int *images[] = {image2image2, image3image3, image4image4};
     int currentImageIndex = 0; // start with the first image
     
     int y = 0;
@@ -231,29 +230,11 @@ void playVideo()
             i = 0;
         // printf("%d\n", i);
         drawImage(video_frames[i], 0, 0, 453, 421);
-        wait_ms(60000);
+        wait_msec(60000);
         i++;
         c = uart_get_char();
     }
     uart_puts("\nVideo stopped");
-}
-void wait_ms(unsigned int n)
-{
-    register unsigned long f, t, r;
-
-    // Get the current counter frequency
-    asm volatile("mrs %0, cntfrq_el0"
-                 : "=r"(f));
-    // Read the current counter
-    asm volatile("mrs %0, cntpct_el0"
-                 : "=r"(t));
-    // Calculate expire value for counter
-    t += ((f / 1000) * n) / 1000;
-    do
-    {
-        asm volatile("mrs %0, cntpct_el0"
-                     : "=r"(r));
-    } while (r < t);
 }
 
 void display_prompt()
@@ -321,12 +302,6 @@ void execute_command(char *cmd)
         }
 
         setcolor(textColor, backgroundColor);
-    }
-
-    else if (strcmp(cmd, commands[3]) == 0)
-    {
-        clearScreen(0);
-        game_menu();
     }
 
     else

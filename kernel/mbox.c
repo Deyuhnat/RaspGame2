@@ -19,7 +19,7 @@
  *
  */
 void mbox_buffer_setup(unsigned int buffer_addr, unsigned int tag_identifier,
-					   unsigned int **res_data, unsigned int res_length,
+					   volatile unsigned int **res_data, unsigned int res_length,
 					   unsigned int req_length, unsigned int *request_values)
 {
 	volatile unsigned int *mBuffer = (volatile unsigned int *)(uintptr_t)buffer_addr;

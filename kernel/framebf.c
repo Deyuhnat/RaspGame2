@@ -271,9 +271,6 @@ void drawOnScreen()
     const int START_Y = LINE_Y + 30;
     const int LINE_SPACING = 25;
     const int CIRCLE_RADIUS_LARGE = 250;
-    const int CIRCLE_RADIUS_SMALL = 30;
-
-    
 
     // Draw title and underline
     drawString(centerPosition(strlen("PROJECT OF GROUP 26")), TITLE_Y, "PROJECT OF GROUP 26", 0xd);
